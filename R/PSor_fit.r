@@ -590,19 +590,19 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
     weig <- as.numeric(table(idc)) / n
     DML.mu.1.out.11 <- (sum(DML.num.final.1.11 * weig, na.rm=TRUE))/(sum(DML.denom.final.11 * weig, na.rm=TRUE))
     DML.mu.0.out.11 <- (sum(DML.num.final.0.11 * weig, na.rm=TRUE))/(sum(DML.denom.final.11 * weig, na.rm=TRUE))
-    DML.var.out.11 <- sum(DML.var.final.11 * weig^2, na.rm=TRUE)
+    DML.var.out.11 <- sum(DML.var.final.11 * weig, na.rm=TRUE)/n
 
     DML.mu.1.out.01 <- (sum(DML.num.final.1.01 * weig, na.rm=TRUE))/(sum(DML.denom.final.01 * weig, na.rm=TRUE))
     DML.mu.0.out.01 <- (sum(DML.num.final.0.01 * weig, na.rm=TRUE))/(sum(DML.denom.final.01 * weig, na.rm=TRUE))
-    DML.var.out.01 <- sum(DML.var.final.01 * weig^2, na.rm=TRUE)
+    DML.var.out.01 <- sum(DML.var.final.01 * weig, na.rm=TRUE)/n
 
     DML.mu.1.out.00 <- (sum(DML.num.final.1.00 * weig, na.rm=TRUE))/(sum(DML.denom.final.00 * weig, na.rm=TRUE))
     DML.mu.0.out.00 <- (sum(DML.num.final.0.00 * weig, na.rm=TRUE))/(sum(DML.denom.final.00 * weig, na.rm=TRUE))
-    DML.var.out.00 <- sum(DML.var.final.00 * weig^2, na.rm=TRUE)
+    DML.var.out.00 <- sum(DML.var.final.00 * weig, na.rm=TRUE)/n
 
     DML.mu.1.out.10 <- (sum(DML.num.final.1.10 * weig, na.rm=TRUE))/(sum(DML.denom.final.10 * weig, na.rm=TRUE))
     DML.mu.0.out.10 <- (sum(DML.num.final.0.10 * weig, na.rm=TRUE))/(sum(DML.denom.final.10 * weig, na.rm=TRUE))
-    DML.var.out.10 <- sum(DML.var.final.10 * weig^2, na.rm=TRUE)
+    DML.var.out.10 <- sum(DML.var.final.10 * weig, na.rm=TRUE)/n
 
     if (scale == "RD"){
       DML.out.11 = DML.mu.1.out.11-DML.mu.0.out.11
