@@ -1,0 +1,196 @@
+PSor Package README
+================
+
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+The goal of **PSor** is to estimate principal causal effects under
+principal stratification using a margin-free or variational-independent
+odds ratio sensitivity parameter to handle cases where monotonicity may
+not hold. The package provides both conditionally doubly robust (CDR)
+estimator and debiased machine learning (DML) estimator.
+
+## Installation
+
+You can install the development version of PSor from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("deckardt98/PSor")
+```
+
+## Example
+
+This example demonstrates how to use `PSor.fit` to estimate principal
+causal effects using a simulated data that is used in our manuscript.
+
+### 1. Load Package and Generate Data
+
+First, we load the necessary packages and define a function to generate
+a simulated dataset. Our data will include a binary treatment `Z`, a
+binary intermediate outcome `D`, a continuous final outcome `Y`, and
+four covariates, `X1`-`X4`.
+
+``` r
+library(truncnorm)
+
+expit <- function(x){return(exp(x)/(1+exp(x)))}
+simu_full_data <- function(n, seed=20250916, theta){
+  # Input:
+  # n: sample size
+  # theta: odds ratio sensitivity parameter; theta = 1 assumes independence and theta = Inf assumes monotonicity
+  set.seed(seed)
+  Z <- D <- c()
+  # Simulate covariates
+  X1 <- rtruncnorm(n, a=-20, b=20, mean = 0, sd = 1)
+  X2 <- rtruncnorm(n, a=-20, b=20, mean = 0, sd = 1)
+  X3 <- rtruncnorm(n, a=-20, b=20, mean = 0, sd = 1)
+  X4 <- rbinom(n, size = 1, prob = 0.5)
+  if (theta==Inf){
+    X1 <- abs(X1)
+    X2 <- abs(X2)
+    X3 <- abs(X3)
+    probZ <- expit(0.1*(X1+X2+X3)+0.5*X4)
+    Z <- rbinom(n, size = 1, prob = probZ)
+    
+    # Simulate G=(D(0),D(1))
+    probD1 <- expit(1.2*X4)
+    probD0 <- expit(-0.4-0.2*X1-0.2*X2-0.2*X3-0.2*X4)
+    prob11 <- probD0
+    prob01 <- probD1 - probD0
+    prob00 <- 1 - probD1
+    prob_matrix <- cbind(prob00, prob01, prob11)
+    # Simulate G from the categorical distribution
+    G <- apply(prob_matrix, 1, function(p) sample(0:2, size = 1, prob = p))
+    # Simulate D(1)
+    D1 <- as.numeric(I(G!=0))
+    # Simulate D(0)
+    D0 <- as.numeric(I(G==2))
+    # Compute observed intermediate outcome
+    D <- D1*Z+(1-Z)*D0
+  } else if (theta==1) {
+    probZ <- expit(0.1*(X1+X2+X3)+0.5*X4)
+    Z <- rbinom(n, size = 1, prob = probZ)
+    # Simulate (D(0),D(1))
+    probD1 <- expit(0.3*X1+0.4*X2+0.3*X3+0.5*X4)
+    probD0 <- expit(0.4*X1+0.3*X2+0.4*X3+0.5*X4)
+    prob11 <- probD0*probD1
+    prob10 <- probD0 - prob11
+    prob01 <- probD1 - prob11
+    prob00 <- 1-prob11-prob10-prob01
+    prob_matrix <- cbind(prob10, prob00, prob01, prob11)
+    jointD <- apply(prob_matrix, 1, function(p) sample(1:4, size = 1, prob = p))
+    # Simulate D(0)
+    D0 <- as.numeric(I(jointD==1|jointD==4))
+    # Simulate D(1)
+    D1 <- as.numeric(I(jointD==3|jointD==4))
+    # Compute observed intermediate outcome
+    D <- D1*Z+(1-Z)*D0
+  } else {
+    probZ <- expit(0.1*(X1+X2+X3)+0.5*X4)
+    Z <- rbinom(n, size = 1, prob = probZ)
+    # Simulate (D(0),D(1))
+    probD1 <- expit(0.3*X1+0.4*X2+0.3*X3+0.5*X4)
+    probD0 <- expit(0.4*X1+0.3*X2+0.4*X3+0.5*X4)
+    deltaX <- (1+(theta-1)*(probD1+probD0))^2-4*theta*(theta-1)*probD1*probD0
+    prob11 <- (1+(theta-1)*(probD1+probD0)-sqrt(deltaX))/2/(theta-1)
+    prob10 <- probD0 - prob11
+    prob01 <- probD1 - prob11
+    prob00 <- 1-prob11-prob10-prob01
+    prob_matrix <- cbind(prob10, prob00, prob01, prob11)
+    jointD <- apply(prob_matrix, 1, function(p) sample(1:4, size = 1, prob = p))
+    # Simulate D(0)
+    D0 <- as.numeric(I(jointD==1|jointD==4))
+    # Simulate D(1)
+    D1 <- as.numeric(I(jointD==3|jointD==4))
+    # Compute observed intermediate outcome
+    D <- D1*Z+(1-Z)*D0
+  }
+  # Simulate potential final outcome
+  meanY1 <- -1+D1+X1+3*X2+3*X3+3*X4
+  meanY0 <- 3-D0-1.5*X1+2*X2+2*X3-2*X4
+  Y1 <- rnorm(n = n, mean = meanY1, sd = 1)
+  Y0 <- rnorm(n = n, mean = meanY0, sd = 1)
+  Y <- Y1*Z+(1-Z)*Y0
+  
+  return(as.data.frame(cbind(X1,X2,X3,X4,Z,D,Y)))
+}
+```
+
+### 2. Run `PSor.fit`
+
+Now, we simulate a sample data set assuming counterfactual intermediate
+independence $\theta(\mathbf{X})=1$, and then call the main function to
+compute principal causal effect under either correctly specified odds
+ratio or incorrectly assumed monotonicity.
+
+``` r
+library(PSor)
+library(SuperLearner)
+#> Loading required package: nnls
+#> Loading required package: gam
+#> Loading required package: splines
+#> Loading required package: foreach
+#> Loaded gam 1.22-6
+#> Super Learner
+#> Version: 2.0-29
+#> Package created on 2024-02-06
+# Generate a data set under independence; or = 1
+n = 500
+theta = 1
+df <-  simu_full_data(n, theta=theta)
+
+# Fit correctly specified odds ratio, or = 1
+PSor.fit(
+  out.formula = Y~X1+X2+X3+X4,
+  ps.formula = D~X1+X2+X3+X4,
+  pro.formula = Z~X1+X2+X3+X4,
+  df = df,
+  out.name = "Y",
+  int.name = "D",
+  trt.name = "Z",
+  cov.names = c("X1","X2","X3","X4"),
+  or = 1,
+  SLmethods = c("SL.glm", "SL.rpart", "SL.nnet"),
+  n.fold = 5,
+  scale = "RD",
+  alpha = 0.05
+)
+#>                    CDR.Est CDR.SE CDR.ci.lower CDR.ci.upper DML.Est DML.SE
+#> Always-Takers (11)   1.977  0.309        1.371        2.583   1.938  3.179
+#> Compliers (01)      -0.770  0.420       -1.594        0.054  -0.841  4.168
+#> Never-Takers (00)   -3.246  0.363       -3.957       -2.535  -3.191  4.068
+#> Defiers (10)        -0.227  0.398       -1.008        0.553  -0.218  4.068
+#>                    DML.ci.lower DML.ci.upper
+#> Always-Takers (11)       -4.292        8.168
+#> Compliers (01)           -9.009        7.328
+#> Never-Takers (00)       -11.163        4.782
+#> Defiers (10)             -8.192        7.755
+
+# Fit by incorrectly assuming monotonicity
+PSor.fit(
+  out.formula = Y~X1+X2+X3+X4,
+  ps.formula = D~X1+X2+X3+X4,
+  pro.formula = Z~X1+X2+X3+X4,
+  df = df,
+  out.name = "Y",
+  int.name = "D",
+  trt.name = "Z",
+  cov.names = c("X1","X2","X3","X4"),
+  or = Inf,
+  SLmethods = c("SL.glm", "SL.rpart", "SL.nnet"),
+  n.fold = 5,
+  scale = "RD",
+  alpha = 0.05
+)
+#>                    CDR.Est CDR.SE CDR.ci.lower CDR.ci.upper DML.Est  DML.SE
+#> Always-Takers (11)   1.518  0.265        0.998        2.037   1.438   2.784
+#> Compliers (01)     -12.928 45.185     -101.489       75.632 -11.754 100.191
+#> Never-Takers (00)   -2.187  0.315       -2.804       -1.571  -2.194   3.091
+#>                    DML.ci.lower DML.ci.upper
+#> Always-Takers (11)       -4.018        6.894
+#> Compliers (01)         -208.125      184.617
+#> Never-Takers (00)        -8.252        3.864
+```
