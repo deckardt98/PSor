@@ -31,7 +31,7 @@ This example demonstrates how to use `PSor.fit` to estimate principal
 causal effects with simulated data from our manuscript. To summarize,
 the data will include a binary treatment `Z`, a binary intermediate
 outcome `D`, a continuous final outcome `Y`, and baseline covariates,
-`**X**`. Let `Y(z)` and `D(z)` respectively denote the potential
+**X**. Let `Y(z)` and `D(z)` respectively denote the potential
 final outcome and potential intermediate outcome under treatment value
 `Z=z`. Under principal stratification, the estimand of interest is the
 principal causal effect:
