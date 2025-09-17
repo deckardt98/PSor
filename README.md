@@ -176,16 +176,16 @@ PSor.fit(
   scale = "RD",
   alpha = 0.05
 )
-#>                    CDR.Est CDR.SE CDR.ci.lower CDR.ci.upper DML.Est DML.SE
-#> Always-Takers (11)   2.193  0.330        1.545        2.840   2.148  0.360
-#> Compliers (01)      -0.198  0.444       -1.067        0.672  -0.241  0.460
-#> Never-Takers (00)   -3.278  0.397       -4.056       -2.500  -3.235  0.405
-#> Defiers (10)        -0.226  0.399       -1.009        0.556  -0.273  0.402
-#>                    DML.ci.lower DML.ci.upper
-#> Always-Takers (11)        1.443        2.853
-#> Compliers (01)           -1.143        0.662
-#> Never-Takers (00)        -4.028       -2.441
-#> Defiers (10)             -1.061        0.515
+#>               CDR.Est CDR.SE CDR.ci.low CDR.ci.up DML.Est DML.SE DML.ci.low
+#> Always-Takers   2.193  0.330      1.545     2.840   2.148  0.360      1.443
+#> Compliers      -0.198  0.444     -1.067     0.672  -0.241  0.460     -1.143
+#> Never-Takers   -3.278  0.397     -4.056    -2.500  -3.235  0.405     -4.028
+#> Defiers        -0.226  0.399     -1.009     0.556  -0.273  0.402     -1.061
+#>               DML.ci.up
+#> Always-Takers     2.853
+#> Compliers         0.662
+#> Never-Takers     -2.441
+#> Defiers           0.515
 
 # Fit by incorrectly assuming monotonicity
 PSor.fit(
