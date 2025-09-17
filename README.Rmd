@@ -39,7 +39,7 @@ First, we load the necessary packages and define a function to generate a simula
 library(truncnorm)
 
 expit <- function(x){return(exp(x)/(1+exp(x)))}
-simu_full_data <- function(n, seed=20250916, theta){
+simu_full_data <- function(n, seed=20250917, theta){
   # Input:
   # n: sample size
   # theta: odds ratio sensitivity parameter; theta = 1 assumes independence and theta = Inf assumes monotonicity

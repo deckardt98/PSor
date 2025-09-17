@@ -55,7 +55,7 @@ and four covariates, `X1`-`X4`.
 library(truncnorm)
 
 expit <- function(x){return(exp(x)/(1+exp(x)))}
-simu_full_data <- function(n, seed=20250916, theta){
+simu_full_data <- function(n, seed=20250917, theta){
   # Input:
   # n: sample size
   # theta: odds ratio sensitivity parameter; theta = 1 assumes independence and theta = Inf assumes monotonicity
@@ -177,15 +177,15 @@ PSor.fit(
   alpha = 0.05
 )
 #>                    CDR.Est CDR.SE CDR.ci.lower CDR.ci.upper DML.Est DML.SE
-#> Always-Takers (11)   1.977  0.309        1.371        2.583   1.938  3.179
-#> Compliers (01)      -0.770  0.420       -1.594        0.054  -0.841  4.168
-#> Never-Takers (00)   -3.246  0.363       -3.957       -2.535  -3.191  4.068
-#> Defiers (10)        -0.227  0.398       -1.008        0.553  -0.218  4.068
+#> Always-Takers (11)   2.193  0.330        1.545        2.840   2.148  0.360
+#> Compliers (01)      -0.198  0.444       -1.067        0.672  -0.241  0.460
+#> Never-Takers (00)   -3.278  0.397       -4.056       -2.500  -3.235  0.405
+#> Defiers (10)        -0.226  0.399       -1.009        0.556  -0.273  0.402
 #>                    DML.ci.lower DML.ci.upper
-#> Always-Takers (11)       -4.292        8.168
-#> Compliers (01)           -9.009        7.328
-#> Never-Takers (00)       -11.163        4.782
-#> Defiers (10)             -8.192        7.755
+#> Always-Takers (11)        1.443        2.853
+#> Compliers (01)           -1.143        0.662
+#> Never-Takers (00)        -4.028       -2.441
+#> Defiers (10)             -1.061        0.515
 
 # Fit by incorrectly assuming monotonicity
 PSor.fit(
@@ -203,14 +203,14 @@ PSor.fit(
   scale = "RD",
   alpha = 0.05
 )
-#>                    CDR.Est CDR.SE CDR.ci.lower CDR.ci.upper DML.Est  DML.SE
-#> Always-Takers (11)   1.518  0.265        0.998        2.037   1.438   2.784
-#> Compliers (01)     -12.928 45.185     -101.489       75.632 -11.754 100.191
-#> Never-Takers (00)   -2.187  0.315       -2.804       -1.571  -2.194   3.091
+#>                    CDR.Est  CDR.SE CDR.ci.lower CDR.ci.upper DML.Est DML.SE
+#> Always-Takers (11)   1.438   0.310        0.831        2.045   1.433  0.317
+#> Compliers (01)     -35.204 522.863    -1059.997      989.589  48.371 21.161
+#> Never-Takers (00)   -2.305   0.298       -2.889       -1.722  -2.277  0.315
 #>                    DML.ci.lower DML.ci.upper
-#> Always-Takers (11)       -4.018        6.894
-#> Compliers (01)         -208.125      184.617
-#> Never-Takers (00)        -8.252        3.864
+#> Always-Takers (11)        0.812        2.055
+#> Compliers (01)            6.895       89.846
+#> Never-Takers (00)        -2.895       -1.659
 ```
 
 Here, the function computes estimates under monotonicity by setting
