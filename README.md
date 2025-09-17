@@ -1,15 +1,19 @@
-PSor Package README
+PSor Package Vignette
 ================
-
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
 The goal of **PSor** is to estimate principal causal effects under
-principal stratification using a margin-free or variational-independent
-odds ratio sensitivity parameter to handle cases where monotonicity may
-not hold. The package provides both conditionally doubly robust (CDR)
-estimator and debiased machine learning (DML) estimator.
+principal stratification using a margin-free, variational-independent
+odds ratio sensitivity parameter, allowing analysis when monotonicity
+may not hold. The framework unifies the monotonicity assumption with the
+counterfactual intermediate independence assumption. The framework also
+assumes the mean principal ignorability. The package accompanies the
+paper \`\`Semiparametric Principal Stratification Analysis Beyond
+Monotonicity’’ and provides point estimates, standard errors, and
+confidence intervals for both the conditionally doubly robust (CDR) and
+debiased machine learning (DML) estimators.
 
 ## Installation
 
@@ -24,14 +28,28 @@ devtools::install_github("deckardt98/PSor")
 ## Example
 
 This example demonstrates how to use `PSor.fit` to estimate principal
-causal effects using a simulated data that is used in our manuscript.
+causal effects with simulated data from our manuscript. To summarize,
+the data will include a binary treatment `Z`, a binary intermediate
+outcome `D`, a continuous final outcome `Y`, and baseline covariates,
+`\mathbf{X}`. Let `Y(z)` and `D(z)` respectively denote the potential
+final outcome and potential intermediate outcome under treatment value
+`Z=z`. Under principal stratification, the estimand of interest is the
+principal causal effect:
+$$\mu_{d_0d_1}=E\{Y(1)-Y(0)|D(0)=d_0,D(1)=d_1\}.$$ For example, under a
+noncompliance setup where $D$ denotes the actual treatment received, the
+principal strata variable $G=(D(0),D(1))$ can be interpreted as follows:
+$G=11$ represents always-takers, $G=01$ represents compliers, $G=00$
+represents never-takers, and $G=10$ represents defiers. The primary
+estimand of interest is the complier average causal effect (CACE) within
+the stratum $G=01$. Next, we use a simulated dataset with four
+covariates to illustrate an example application of the package.
 
 ### 1. Load Package and Generate Data
 
 First, we load the necessary packages and define a function to generate
-a simulated dataset. Our data will include a binary treatment `Z`, a
-binary intermediate outcome `D`, a continuous final outcome `Y`, and
-four covariates, `X1`-`X4`.
+a simulated dataset. This simulated data will include a binary treatment
+`Z`, a binary intermediate outcome `D`, a continuous final outcome `Y`,
+and four covariates, `X1`-`X4`.
 
 ``` r
 library(truncnorm)
@@ -122,9 +140,9 @@ simu_full_data <- function(n, seed=20250916, theta){
 ### 2. Run `PSor.fit`
 
 Now, we simulate a sample data set assuming counterfactual intermediate
-independence $\theta(\mathbf{X})=1$, and then call the main function to
-compute principal causal effect under either correctly specified odds
-ratio or incorrectly assumed monotonicity.
+independence with $\theta(\mathbf{X})=1$, and then call the main
+function to compute principal causal effects under either correctly
+specified odds ratio or incorrectly assumed monotonicity.
 
 ``` r
 library(PSor)
@@ -194,3 +212,12 @@ PSor.fit(
 #> Compliers (01)         -208.125      184.617
 #> Never-Takers (00)        -8.252        3.864
 ```
+
+Here, the function computes estimates under monotonicity by setting
+`or = Inf`. The `CDR` estimator uses linear regression for the
+continuous outcome and logistic regression for the intermediate outcome
+and treatment propensity. For the DML estimator, we will use the
+`SuperLearner` package for nuisance function estimation, including the
+outcome regression, principal score, and propensity score. The argument
+`SLmethods = c("SL.glm", "SL.rpart", "SL.nnet")` specifies the machine
+learning algorithms used to estimate the nuisance functions.

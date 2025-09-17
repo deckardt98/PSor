@@ -183,7 +183,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_tr11,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.0001)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -198,7 +197,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_tr01,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.001)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -213,7 +211,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_tr00,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.1)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -222,6 +219,23 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         )
       )
     }
+
+    ### Compute the standard error
+    estimate.11 <- estimate.sand.se.11(df, formula.all.11$pi, formula.all.11$p0, formula.all.11$p1,
+                                       formula.all.11$m01, formula.all.11$m11, root.est.11)
+    estimate.01 <- estimate.sand.se.01(df, formula.all.01$pi, formula.all.01$p0, formula.all.01$p1,
+                                       formula.all.01$m00, formula.all.01$m11, root.est.01)
+    estimate.00 <- estimate.sand.se.00(df, formula.all.00$pi, formula.all.00$p0, formula.all.00$p1,
+                                       formula.all.00$m00, formula.all.00$m10, root.est.00)
+
+    cov_matrix.11 <- estimate.11@vcov
+    cov_matrix.01 <- estimate.01@vcov
+    cov_matrix.00 <- estimate.00@vcov
+
+    se.par.11 <- sqrt(cov_matrix.11[ncol(cov_matrix.11), ncol(cov_matrix.11)])
+    se.par.01 <- sqrt(cov_matrix.01[ncol(cov_matrix.01), ncol(cov_matrix.01)])
+    se.par.00 <- sqrt(cov_matrix.00[ncol(cov_matrix.00), ncol(cov_matrix.00)])
+
   } else {
     ########### under non-monotonicity ############
     ### Point estimate
@@ -269,7 +283,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_qr11,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.1)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -284,7 +297,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_qr01,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.001)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -299,7 +311,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_qr00,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.1)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -314,7 +325,6 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         estFUN = eq_qr10,
         data = data,
         outer_args = list(models = models, scale = scale),
-        #root_control = setup_root_control(start = roots+rnorm(length(roots),mean=0,sd=0.1)),
         compute_roots = FALSE,
         roots = roots,
         deriv_control = setup_deriv_control(
@@ -323,51 +333,58 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
         )
       )
     }
+
+    ### Compute the standard error
+    estimate.11 <- estimate.sand.se.11(df, formula.all.11$pi, formula.all.11$p0, formula.all.11$p1,
+                                       formula.all.11$m01, formula.all.11$m11, root.est.11)
+    estimate.01 <- estimate.sand.se.01(df, formula.all.01$pi, formula.all.01$p0, formula.all.01$p1,
+                                       formula.all.01$m00, formula.all.01$m11, root.est.01)
+    estimate.00 <- estimate.sand.se.00(df, formula.all.00$pi, formula.all.00$p0, formula.all.00$p1,
+                                       formula.all.00$m00, formula.all.00$m10, root.est.00)
+    estimate.10 <- estimate.sand.se.10(df, formula.all.10$pi, formula.all.10$p0, formula.all.10$p1,
+                                       formula.all.10$m01, formula.all.10$m10, root.est.10)
+
+    cov_matrix.11 <- estimate.11@vcov
+    cov_matrix.01 <- estimate.01@vcov
+    cov_matrix.00 <- estimate.00@vcov
+    cov_matrix.10 <- estimate.10@vcov
+
+    se.par.11 <- sqrt(cov_matrix.11[ncol(cov_matrix.11), ncol(cov_matrix.11)])
+    se.par.01 <- sqrt(cov_matrix.01[ncol(cov_matrix.01), ncol(cov_matrix.01)])
+    se.par.00 <- sqrt(cov_matrix.00[ncol(cov_matrix.00), ncol(cov_matrix.00)])
+    se.par.10 <- sqrt(cov_matrix.10[ncol(cov_matrix.10), ncol(cov_matrix.10)])
   }
-  ### Compute the standard error
-  estimate.11 <- estimate.sand.se.11(df, formula.all.11$pi, formula.all.11$p0, formula.all.11$p1,
-                                     formula.all.11$m01, formula.all.11$m11, root.est.11)
-  estimate.01 <- estimate.sand.se.01(df, formula.all.01$pi, formula.all.01$p0, formula.all.01$p1,
-                                     formula.all.01$m00, formula.all.01$m11, root.est.01)
-  estimate.00 <- estimate.sand.se.00(df, formula.all.00$pi, formula.all.00$p0, formula.all.00$p1,
-                                     formula.all.00$m00, formula.all.00$m10, root.est.00)
-  estimate.10 <- estimate.sand.se.10(df, formula.all.10$pi, formula.all.10$p0, formula.all.10$p1,
-                                     formula.all.10$m01, formula.all.10$m10, root.est.10)
-  cov_matrix.11 <- estimate.11@vcov
-  cov_matrix.01 <- estimate.01@vcov
-  cov_matrix.00 <- estimate.00@vcov
-  cov_matrix.10 <- estimate.10@vcov
-  se.par.11 <- sqrt(cov_matrix.11[ncol(cov_matrix.11), ncol(cov_matrix.11)])
-  se.par.01 <- sqrt(cov_matrix.01[ncol(cov_matrix.01), ncol(cov_matrix.01)])
-  se.par.00 <- sqrt(cov_matrix.00[ncol(cov_matrix.00), ncol(cov_matrix.00)])
-  se.par.10 <- sqrt(cov_matrix.10[ncol(cov_matrix.10), ncol(cov_matrix.10)])
 
   if (scale == "RD"){
     par.out.11 = point.par.11
-    par.out.10 = point.par.10
     par.out.01 = point.par.01
     par.out.00 = point.par.00
     par.ci.u.11 = par.out.11+qnorm(1-alpha/2)*se.par.11
-    par.ci.u.10 = par.out.10+qnorm(1-alpha/2)*se.par.10
     par.ci.u.01 = par.out.01+qnorm(1-alpha/2)*se.par.01
     par.ci.u.00 = par.out.00+qnorm(1-alpha/2)*se.par.00
     par.ci.l.11 = par.out.11-qnorm(1-alpha/2)*se.par.11
-    par.ci.l.10 = par.out.10-qnorm(1-alpha/2)*se.par.10
     par.ci.l.01 = par.out.01-qnorm(1-alpha/2)*se.par.01
     par.ci.l.00 = par.out.00-qnorm(1-alpha/2)*se.par.00
+    if(!(length(or) == 1 & or[1] == Inf)){
+      par.out.10 = point.par.10
+      par.ci.u.10 = par.out.10+qnorm(1-alpha/2)*se.par.10
+      par.ci.l.10 = par.out.10-qnorm(1-alpha/2)*se.par.10
+    }
   } else if (scale == "RR"|scale == "OR"){
     par.out.11 = exp(point.par.11)
-    par.out.10 = exp(point.par.10)
     par.out.01 = exp(point.par.01)
     par.out.00 = exp(point.par.00)
     par.ci.u.11 = exp(point.par.11+qnorm(1-alpha/2)*se.par.11)
-    par.ci.u.10 = exp(point.par.10+qnorm(1-alpha/2)*se.par.10)
     par.ci.u.01 = exp(point.par.01+qnorm(1-alpha/2)*se.par.01)
     par.ci.u.00 = exp(point.par.00+qnorm(1-alpha/2)*se.par.00)
     par.ci.l.11 = exp(point.par.11-qnorm(1-alpha/2)*se.par.11)
-    par.ci.l.10 = exp(point.par.10-qnorm(1-alpha/2)*se.par.10)
     par.ci.l.01 = exp(point.par.01-qnorm(1-alpha/2)*se.par.01)
     par.ci.l.00 = exp(point.par.00-qnorm(1-alpha/2)*se.par.00)
+    if(!(length(or) == 1 & or[1] == Inf)){
+      par.out.10 = exp(point.par.10)
+      par.ci.u.10 = exp(point.par.10+qnorm(1-alpha/2)*se.par.10)
+      par.ci.l.10 = exp(point.par.10-qnorm(1-alpha/2)*se.par.10)
+    }
   }
 
 
@@ -537,7 +554,18 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
   }
   if (is.null(results)) {
     message("Failed to get results after ", max_retries, " attempts. Returning NA.")
-    return(rep(NA, 16))
+    # RETURN NA INSTEAD OF ERRORING
+    # This creates a dummy structure to prevent the next lines from failing
+    na_results_matrix <- matrix(NA, nrow = ifelse(length(or) == 1 & or[1] == Inf, 3, 4), ncol = 8)
+    colnames(na_results_matrix) <- c("CDR.Est", "CDR.SE", "CDR.ci.lower", "CDR.ci.upper",
+                                     "DML.Est", "DML.SE", "DML.ci.lower", "DML.ci.upper")
+    rownames_vec <- c("Always-Takers (11)", "Compliers (01)", "Never-Takers (00)")
+    if (!(length(or) == 1 & or[1] == Inf)) {
+      rownames_vec <- c(rownames_vec, "Defiers (10)")
+    }
+    rownames(na_results_matrix) <- rownames_vec
+    return(as.data.frame(na_results_matrix))
+
   } else {
     DML.num.final.1.11 <- sapply(results, `[`, 1)
     DML.num.final.0.11 <- sapply(results, `[`, 2)
@@ -560,76 +588,84 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
     DML.var.final.10 = sapply(results, `[`, 16)
 
     weig <- as.numeric(table(idc)) / n
-    DML.mu.1.out.11 <- (sum(DML.num.final.1.11 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.11 * as.numeric(table(idc))) / n)
-    DML.mu.0.out.11 <- (sum(DML.num.final.0.11 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.11 * as.numeric(table(idc))) / n)
-    DML.var.out.11 <- sum(DML.var.final.11 * as.numeric(table(idc))) / n^2
-    DML.mu.1.out.01 <- (sum(DML.num.final.1.01 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.01 * as.numeric(table(idc))) / n)
-    DML.mu.0.out.01 <- (sum(DML.num.final.0.01 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.01 * as.numeric(table(idc))) / n)
-    DML.var.out.01 <- sum(DML.var.final.01 * as.numeric(table(idc))) / n^2
-    DML.mu.1.out.00 <- (sum(DML.num.final.1.00 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.00 * as.numeric(table(idc))) / n)
-    DML.mu.0.out.00 <- (sum(DML.num.final.0.00 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.00 * as.numeric(table(idc))) / n)
-    DML.var.out.00 <- sum(DML.var.final.00 * as.numeric(table(idc))) / n^2
-    DML.mu.1.out.10 <- (sum(DML.num.final.1.10 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.10 * as.numeric(table(idc))) / n)
-    DML.mu.0.out.10 <- (sum(DML.num.final.0.10 * as.numeric(table(idc))) / n)/(sum(DML.denom.final.10 * as.numeric(table(idc))) / n)
-    DML.var.out.10 <- sum(DML.var.final.10 * as.numeric(table(idc))) / n^2
+    DML.mu.1.out.11 <- (sum(DML.num.final.1.11 * weig, na.rm=TRUE))/(sum(DML.denom.final.11 * weig, na.rm=TRUE))
+    DML.mu.0.out.11 <- (sum(DML.num.final.0.11 * weig, na.rm=TRUE))/(sum(DML.denom.final.11 * weig, na.rm=TRUE))
+    DML.var.out.11 <- sum(DML.var.final.11 * weig^2, na.rm=TRUE)
+
+    DML.mu.1.out.01 <- (sum(DML.num.final.1.01 * weig, na.rm=TRUE))/(sum(DML.denom.final.01 * weig, na.rm=TRUE))
+    DML.mu.0.out.01 <- (sum(DML.num.final.0.01 * weig, na.rm=TRUE))/(sum(DML.denom.final.01 * weig, na.rm=TRUE))
+    DML.var.out.01 <- sum(DML.var.final.01 * weig^2, na.rm=TRUE)
+
+    DML.mu.1.out.00 <- (sum(DML.num.final.1.00 * weig, na.rm=TRUE))/(sum(DML.denom.final.00 * weig, na.rm=TRUE))
+    DML.mu.0.out.00 <- (sum(DML.num.final.0.00 * weig, na.rm=TRUE))/(sum(DML.denom.final.00 * weig, na.rm=TRUE))
+    DML.var.out.00 <- sum(DML.var.final.00 * weig^2, na.rm=TRUE)
+
+    DML.mu.1.out.10 <- (sum(DML.num.final.1.10 * weig, na.rm=TRUE))/(sum(DML.denom.final.10 * weig, na.rm=TRUE))
+    DML.mu.0.out.10 <- (sum(DML.num.final.0.10 * weig, na.rm=TRUE))/(sum(DML.denom.final.10 * weig, na.rm=TRUE))
+    DML.var.out.10 <- sum(DML.var.final.10 * weig^2, na.rm=TRUE)
+
     if (scale == "RD"){
       DML.out.11 = DML.mu.1.out.11-DML.mu.0.out.11
-      DML.out.10 = DML.mu.1.out.10-DML.mu.0.out.10
       DML.out.01 = DML.mu.1.out.01-DML.mu.0.out.01
       DML.out.00 = DML.mu.1.out.00-DML.mu.0.out.00
       DML.ci.u.11 = DML.out.11+qnorm(1-alpha/2)*sqrt(DML.var.out.11)
-      DML.ci.u.10 = DML.out.10+qnorm(1-alpha/2)*sqrt(DML.var.out.10)
       DML.ci.u.01 = DML.out.01+qnorm(1-alpha/2)*sqrt(DML.var.out.01)
       DML.ci.u.00 = DML.out.00+qnorm(1-alpha/2)*sqrt(DML.var.out.00)
       DML.ci.l.11 = DML.out.11-qnorm(1-alpha/2)*sqrt(DML.var.out.11)
-      DML.ci.l.10 = DML.out.10-qnorm(1-alpha/2)*sqrt(DML.var.out.10)
       DML.ci.l.01 = DML.out.01-qnorm(1-alpha/2)*sqrt(DML.var.out.01)
       DML.ci.l.00 = DML.out.00-qnorm(1-alpha/2)*sqrt(DML.var.out.00)
+      if(!(length(or) == 1 & or[1] == Inf)){
+        DML.out.10 = DML.mu.1.out.10-DML.mu.0.out.10
+        DML.ci.u.10 = DML.out.10+qnorm(1-alpha/2)*sqrt(DML.var.out.10)
+        DML.ci.l.10 = DML.out.10-qnorm(1-alpha/2)*sqrt(DML.var.out.10)
+      }
     } else if (scale == "RR"){
       DML.out.11 = DML.mu.1.out.11/DML.mu.0.out.11
-      DML.out.10 = DML.mu.1.out.10/DML.mu.0.out.10
       DML.out.01 = DML.mu.1.out.01/DML.mu.0.out.01
       DML.out.00 = DML.mu.1.out.00/DML.mu.0.out.00
       DML.out.log.11 = log(DML.mu.1.out.11)-log(DML.mu.0.out.11)
-      DML.out.log.10 = log(DML.mu.1.out.10)-log(DML.mu.0.out.10)
       DML.out.log.01 = log(DML.mu.1.out.01)-log(DML.mu.0.out.01)
       DML.out.log.00 = log(DML.mu.1.out.00)-log(DML.mu.0.out.00)
       DML.ci.u.11 = exp(DML.out.log.11+qnorm(1-alpha/2)*sqrt(DML.var.out.11))
-      DML.ci.u.10 = exp(DML.out.log.10+qnorm(1-alpha/2)*sqrt(DML.var.out.10))
       DML.ci.u.01 = exp(DML.out.log.01+qnorm(1-alpha/2)*sqrt(DML.var.out.01))
       DML.ci.u.00 = exp(DML.out.log.00+qnorm(1-alpha/2)*sqrt(DML.var.out.00))
       DML.ci.l.11 = exp(DML.out.log.11-qnorm(1-alpha/2)*sqrt(DML.var.out.11))
-      DML.ci.l.10 = exp(DML.out.log.10-qnorm(1-alpha/2)*sqrt(DML.var.out.10))
       DML.ci.l.01 = exp(DML.out.log.01-qnorm(1-alpha/2)*sqrt(DML.var.out.01))
       DML.ci.l.00 = exp(DML.out.log.00-qnorm(1-alpha/2)*sqrt(DML.var.out.00))
+      if(!(length(or) == 1 & or[1] == Inf)){
+        DML.out.10 = DML.mu.1.out.10/DML.mu.0.out.10
+        DML.out.log.10 = log(DML.mu.1.out.10)-log(DML.mu.0.out.10)
+        DML.ci.u.10 = exp(DML.out.log.10+qnorm(1-alpha/2)*sqrt(DML.var.out.10))
+        DML.ci.l.10 = exp(DML.out.log.10-qnorm(1-alpha/2)*sqrt(DML.var.out.10))
+      }
     } else if (scale == "OR"){
       DML.out.11 = DML.mu.1.out.11*(1-DML.mu.0.out.11)/DML.mu.0.out.11/(1-DML.mu.1.out.11)
-      DML.out.10 = DML.mu.1.out.10*(1-DML.mu.0.out.10)/DML.mu.0.out.10/(1-DML.mu.1.out.10)
       DML.out.01 = DML.mu.1.out.01*(1-DML.mu.0.out.01)/DML.mu.0.out.01/(1-DML.mu.1.out.01)
       DML.out.00 = DML.mu.1.out.00*(1-DML.mu.0.out.00)/DML.mu.0.out.00/(1-DML.mu.1.out.00)
       DML.out.log.11 = log(DML.mu.1.out.11/(1-DML.mu.1.out.11))-log(DML.mu.0.out.11/(1-DML.mu.0.out.11))
-      DML.out.log.10 = log(DML.mu.1.out.10/(1-DML.mu.1.out.10))-log(DML.mu.0.out.10/(1-DML.mu.0.out.10))
       DML.out.log.01 = log(DML.mu.1.out.01/(1-DML.mu.1.out.01))-log(DML.mu.0.out.01/(1-DML.mu.0.out.01))
       DML.out.log.00 = log(DML.mu.1.out.00/(1-DML.mu.1.out.00))-log(DML.mu.0.out.00/(1-DML.mu.0.out.00))
       DML.ci.u.11 = exp(DML.out.log.11+qnorm(1-alpha/2)*sqrt(DML.var.out.11))
-      DML.ci.u.10 = exp(DML.out.log.10+qnorm(1-alpha/2)*sqrt(DML.var.out.10))
       DML.ci.u.01 = exp(DML.out.log.01+qnorm(1-alpha/2)*sqrt(DML.var.out.01))
       DML.ci.u.00 = exp(DML.out.log.00+qnorm(1-alpha/2)*sqrt(DML.var.out.00))
       DML.ci.l.11 = exp(DML.out.log.11-qnorm(1-alpha/2)*sqrt(DML.var.out.11))
-      DML.ci.l.10 = exp(DML.out.log.10-qnorm(1-alpha/2)*sqrt(DML.var.out.10))
       DML.ci.l.01 = exp(DML.out.log.01-qnorm(1-alpha/2)*sqrt(DML.var.out.01))
       DML.ci.l.00 = exp(DML.out.log.00-qnorm(1-alpha/2)*sqrt(DML.var.out.00))
+      if(!(length(or) == 1 & or[1] == Inf)){
+        DML.out.10 = DML.mu.1.out.10*(1-DML.mu.0.out.10)/DML.mu.0.out.10/(1-DML.mu.1.out.10)
+        DML.out.log.10 = log(DML.mu.1.out.10/(1-DML.mu.1.out.10))-log(DML.mu.0.out.10/(1-DML.mu.0.out.10))
+        DML.ci.u.10 = exp(DML.out.log.10+qnorm(1-alpha/2)*sqrt(DML.var.out.10))
+        DML.ci.l.10 = exp(DML.out.log.10-qnorm(1-alpha/2)*sqrt(DML.var.out.10))
+      }
     }
 
-    out.all.11 <- c(par.out.11, se.par.11, par.ci.l.11, par.ci.u.11,
-                    DML.out.11, sqrt(DML.var.out.11), DML.ci.l.11, DML.ci.u.11)
-    out.all.01 <- c(par.out.01, se.par.01, par.ci.l.01, par.ci.u.01,
-                    DML.out.01, sqrt(DML.var.out.01), DML.ci.l.01, DML.ci.u.01)
-    out.all.00 <- c(par.out.00, se.par.00, par.ci.l.00, par.ci.u.00,
-                    DML.out.00, sqrt(DML.var.out.00), DML.ci.l.00, DML.ci.u.00)
-    out.all.10 <- c(par.out.10, se.par.10, par.ci.l.10, par.ci.u.10,
-                    DML.out.10, sqrt(DML.var.out.10), DML.ci.l.10, DML.ci.u.10)
     if (length(or) == 1 & or[1] == Inf) {
+      out.all.11 <- c(par.out.11, se.par.11, par.ci.l.11, par.ci.u.11,
+                      DML.out.11, sqrt(DML.var.out.11), DML.ci.l.11, DML.ci.u.11)
+      out.all.01 <- c(par.out.01, se.par.01, par.ci.l.01, par.ci.u.01,
+                      DML.out.01, sqrt(DML.var.out.01), DML.ci.l.01, DML.ci.u.01)
+      out.all.00 <- c(par.out.00, se.par.00, par.ci.l.00, par.ci.u.00,
+                      DML.out.00, sqrt(DML.var.out.00), DML.ci.l.00, DML.ci.u.00)
       results_matrix <- rbind(out.all.11, out.all.01, out.all.00)
       colnames(results_matrix) <- c("CDR.Est", "CDR.SE", "CDR.ci.lower", "CDR.ci.upper",
                                     "DML.Est", "DML.SE", "DML.ci.lower", "DML.ci.upper")
@@ -637,6 +673,14 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
                                     "Never-Takers (00)")
       results_table <- as.data.frame(results_matrix)
     } else {
+      out.all.11 <- c(par.out.11, se.par.11, par.ci.l.11, par.ci.u.11,
+                      DML.out.11, sqrt(DML.var.out.11), DML.ci.l.11, DML.ci.u.11)
+      out.all.01 <- c(par.out.01, se.par.01, par.ci.l.01, par.ci.u.01,
+                      DML.out.01, sqrt(DML.var.out.01), DML.ci.l.01, DML.ci.u.01)
+      out.all.00 <- c(par.out.00, se.par.00, par.ci.l.00, par.ci.u.00,
+                      DML.out.00, sqrt(DML.var.out.00), DML.ci.l.00, DML.ci.u.00)
+      out.all.10 <- c(par.out.10, se.par.10, par.ci.l.10, par.ci.u.10,
+                      DML.out.10, sqrt(DML.var.out.10), DML.ci.l.10, DML.ci.u.10)
       results_matrix <- rbind(out.all.11, out.all.01, out.all.00, out.all.10)
       colnames(results_matrix) <- c("CDR.Est", "CDR.SE", "CDR.ci.lower", "CDR.ci.upper",
                                     "DML.Est", "DML.SE", "DML.ci.lower", "DML.ci.upper")
