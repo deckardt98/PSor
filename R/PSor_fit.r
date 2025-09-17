@@ -682,8 +682,8 @@ PSor.fit <- function(out.formula, ps.formula, pro.formula,
       out.all.10 <- c(par.out.10, se.par.10, par.ci.l.10, par.ci.u.10,
                       DML.out.10, sqrt(DML.var.out.10), DML.ci.l.10, DML.ci.u.10)
       results_matrix <- rbind(out.all.11, out.all.01, out.all.00, out.all.10)
-      colnames(results_matrix) <- c("CDR.Est", "CDR.SE", "CDR.ci.lower", "CDR.ci.upper",
-                                    "DML.Est", "DML.SE", "DML.ci.lower", "DML.ci.upper")
+      colnames(results_matrix) <- c("CDR.Est", "CDR.SE", "CDR.ci.low", "CDR.ci.up",
+                                    "DML.Est", "DML.SE", "DML.ci.low", "DML.ci.up")
       rownames(results_matrix) <- c("Always-Takers", "Compliers",
                                     "Never-Takers", "Defiers")
       results_table <- as.data.frame(results_matrix)
