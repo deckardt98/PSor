@@ -35,7 +35,7 @@ outcome `D`, a continuous final outcome `Y`, and baseline covariates,
 final outcome and potential intermediate outcome under treatment value
 `Z=z`. Under principal stratification, the estimand of interest is the
 principal causal effect:
-$$\mu_{d_0d_1}=E\{Y(1)-Y(0)|D(0)=d_0,D(1)=d_1\}.$$ For example, under a
+$$\mu_{d_0d_1}=E\left\{Y(1)-Y(0)|D(0)=d_0,D(1)=d_1\right\}.$$ For example, under a
 noncompliance setup where $D$ denotes the actual treatment received, the
 principal strata variable $G=(D(0),D(1))$ can be interpreted as follows:
 $G=11$ represents always-takers, $G=01$ represents compliers, $G=00$
