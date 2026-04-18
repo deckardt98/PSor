@@ -8,19 +8,19 @@ Authors@R: c(
     person("Michael O.", "Harhay", role = "ctb"),
     person("Fan", "Li", role = "ctb")
   )
-Description: Estimates principal causal effects under principal stratification 
-    using a margin-free, conditional odds ratio sensitivity parameter. This 
-    framework unifies the monotonicity assumption and the counterfactual 
-    intermediate independence assumption, allowing for robust analysis when 
-    monotonicity may not hold. Computes point estimates, standard errors, and 
-    confidence intervals for conditionally doubly robust (CDR) and debiased 
-    machine learning (DML) estimators, as developed in the accompanying 
-    methodology for semiparametric principal stratification analysis beyond 
-    monotonicity.
+Description: Estimates principal causal effects under principal stratification
+    using a margin-free, conditional odds ratio sensitivity parameter. This
+    framework unifies the monotonicity assumption and the counterfactual
+    intermediate independence assumption, allowing for robust analysis when
+    monotonicity may not hold. Computes point estimates, standard errors, and
+    confidence intervals for conditionally doubly robust and machine-learning-
+    based estimators, as developed in the accompanying methodology for
+    semiparametric principal stratification analysis beyond monotonicity.
 License: MIT + file LICENSE
 URL: https://github.com/deckardt98/PSor
 BugReports: https://github.com/deckardt98/PSor/issues
 Encoding: UTF-8
+Language: en-US
 RoxygenNote: 7.3.3
 Imports:
     stats,
@@ -34,4 +34,3 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
-VignetteBuilder: knitr
