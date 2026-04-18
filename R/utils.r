@@ -625,7 +625,7 @@ eq_qr01 <- function(data, models, scale){
         m11_scores(theta[m11_pos])*I(Z==1)*I(D==1),
         omega1-theta[max(m11_pos)+1]*tau,
         omega0-theta[max(m11_pos)+2]*tau,
-        log.odds(theta[max(m11_pos)+1])-log.odds(theta[max(m11_pos)+2])-theta[max(m11_pos)+3])
+        log_odds(theta[max(m11_pos)+1])-log_odds(theta[max(m11_pos)+2])-theta[max(m11_pos)+3])
     }
   }
 }
@@ -699,7 +699,7 @@ eq_tr01 <- function(data, models, scale){
         m11_scores(theta[m11_pos])*I(Z==1)*I(D==1),
         (p1-p0)/p1*psi_YD1-om11*(psi_D0-p0/p1*psi_D1)-theta[max(m11_pos)+1]*(psi_D1-psi_D0),
         (p1-p0)/(1-p0)*psi_Y1_D0-om00*(1-psi_D1-(1-p1)/(1-p0)*(1-psi_D0))-theta[max(m11_pos)+2]*(psi_D1-psi_D0),
-        log.odds(theta[max(m11_pos)+1])-log.odds(theta[max(m11_pos)+2])-theta[max(m11_pos)+3])
+        log_odds(theta[max(m11_pos)+1])-log_odds(theta[max(m11_pos)+2])-theta[max(m11_pos)+3])
     }
   }
 }
@@ -979,7 +979,7 @@ eq_qr00 <- function(data, models, scale){
         m10_scores(theta[m10_pos])*I(Z==1)*I(D==0),
         omega1-theta[max(m10_pos)+1]*tau,
         omega0-theta[max(m10_pos)+2]*tau,
-        log.odds(theta[max(m10_pos)+1])-log.odds(theta[max(m10_pos)+2])-theta[max(m10_pos)+3])
+        log_odds(theta[max(m10_pos)+1])-log_odds(theta[max(m10_pos)+2])-theta[max(m10_pos)+3])
     }
   }
 }
@@ -1053,7 +1053,7 @@ eq_tr00 <- function(data, models, scale){
         m10_scores(theta[m10_pos])*I(Z==1)*I(D==0),
         psi_Y1_D1-theta[max(m10_pos)+1]*(1-psi_D1),
         (1-p1)/(1-p0)*psi_Y1_D0+om00*(1-psi_D1-(1-p1)/(1-p0)*(1-psi_D0))-theta[max(m10_pos)+2]*(1-psi_D1),
-        log.odds(theta[max(m10_pos)+1])-log.odds(theta[max(m10_pos)+2])-theta[max(m10_pos)+3])
+        log_odds(theta[max(m10_pos)+1])-log_odds(theta[max(m10_pos)+2])-theta[max(m10_pos)+3])
     }
   }
 }
@@ -1256,7 +1256,7 @@ eq_qr10 <- function(data, models, scale){
         m10_scores(theta[m10_pos])*I(Z==1)*I(D==0),
         omega1-theta[max(m10_pos)+1]*tau,
         omega0-theta[max(m10_pos)+2]*tau,
-        log.odds(theta[max(m10_pos)+1])-log.odds(theta[max(m10_pos)+2])-theta[max(m10_pos)+3])
+        log_odds(theta[max(m10_pos)+1])-log_odds(theta[max(m10_pos)+2])-theta[max(m10_pos)+3])
     }
   }
 }
@@ -1297,4 +1297,4 @@ expit <- function(x){return(exp(x)/(1+exp(x)))}
 #' Log-odds function
 #' @param x A numeric vector of probabilities.
 #' @noRd
-log.odds <- function(x){return(log(x/(1-x)))}
+log_odds <- function(x){return(log(x/(1-x)))}

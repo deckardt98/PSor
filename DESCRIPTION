@@ -1,20 +1,37 @@
 Package: PSor
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Type: Package
+Title: Semiparametric Principal Stratification Analysis Beyond Monotonicity
+Version: 0.1.0
+Authors@R: c(
+    person("Jiaqi", "Tong", email = "jiaqi.tong@yale.edu", role = c("aut", "cre"), comment = c(ORCID = "0009-0005-8922-3386")),
+    person("Brennan", "Kahan", role = "ctb"),
+    person("Michael O.", "Harhay", role = "ctb"),
+    person("Fan", "Li", role = "ctb")
+  )
+Description: Estimates principal causal effects under principal stratification 
+    using a margin-free, conditional odds ratio sensitivity parameter. This 
+    framework unifies the monotonicity assumption and the counterfactual 
+    intermediate independence assumption, allowing for robust analysis when 
+    monotonicity may not hold. Computes point estimates, standard errors, and 
+    confidence intervals for conditionally doubly robust (CDR) and debiased 
+    machine learning (DML) estimators, as developed in the accompanying 
+    methodology for semiparametric principal stratification analysis beyond 
+    monotonicity.
 License: MIT + file LICENSE
+URL: https://github.com/deckardt98/PSor
+BugReports: https://github.com/deckardt98/PSor/issues
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Imports: 
+Imports:
+    stats,
+    SuperLearner,
     caret,
     dplyr,
     geex,
     magrittr,
-    numDeriv,
-    stats,
-    SuperLearner
-URL: https://github.com/deckardt98/PSor
-BugReports: https://github.com/deckardt98/PSor/issues
+    numDeriv
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

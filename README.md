@@ -10,8 +10,8 @@ odds ratio sensitivity parameter, allowing analysis when monotonicity
 may not hold. The framework unifies the monotonicity assumption with the
 counterfactual intermediate independence assumption. The framework also
 assumes the mean principal ignorability. The package accompanies the
-paper \`\`Semiparametric Principal Stratification Analysis Beyond
-Monotonicity’’ and provides point estimates, standard errors, and
+paper “Semiparametric Principal Stratification Analysis Beyond
+Monotonicity” and provides point estimates, standard errors, and
 confidence intervals for both the conditionally doubly robust (CDR) and
 debiased machine learning (DML) estimators.
 
@@ -177,15 +177,15 @@ PSor.fit(
   alpha = 0.05
 )
 #>               CDR.Est CDR.SE CDR.ci.low CDR.ci.up DML.Est DML.SE DML.ci.low
-#> Always-Takers   2.193  0.330      1.545     2.840   2.148  0.360      1.443
-#> Compliers      -0.198  0.444     -1.067     0.672  -0.241  0.460     -1.143
-#> Never-Takers   -3.278  0.397     -4.056    -2.500  -3.235  0.405     -4.028
-#> Defiers        -0.226  0.399     -1.009     0.556  -0.273  0.402     -1.061
+#> Always-Takers   2.193  0.330      1.545     2.840   2.146  0.359      1.441
+#> Compliers      -0.198  0.444     -1.067     0.672  -0.239  0.461     -1.142
+#> Never-Takers   -3.278  0.397     -4.056    -2.500  -3.235  0.405     -4.029
+#> Defiers        -0.226  0.399     -1.009     0.556  -0.272  0.402     -1.060
 #>               DML.ci.up
-#> Always-Takers     2.853
-#> Compliers         0.662
-#> Never-Takers     -2.441
-#> Defiers           0.515
+#> Always-Takers     2.850
+#> Compliers         0.664
+#> Never-Takers     -2.442
+#> Defiers           0.516
 
 # Fit by incorrectly assuming monotonicity
 PSor.fit(
@@ -205,12 +205,12 @@ PSor.fit(
 )
 #>                    CDR.Est  CDR.SE CDR.ci.lower CDR.ci.upper DML.Est DML.SE
 #> Always-Takers (11)   1.438   0.310        0.831        2.045   1.433  0.317
-#> Compliers (01)     -35.204 522.863    -1059.997      989.589  48.371 21.161
-#> Never-Takers (00)   -2.305   0.298       -2.889       -1.722  -2.277  0.315
+#> Compliers (01)     -35.204 522.863    -1059.997      989.589  46.878 21.272
+#> Never-Takers (00)   -2.305   0.298       -2.889       -1.722  -2.278  0.315
 #>                    DML.ci.lower DML.ci.upper
 #> Always-Takers (11)        0.812        2.055
-#> Compliers (01)            6.895       89.846
-#> Never-Takers (00)        -2.895       -1.659
+#> Compliers (01)            5.185       88.571
+#> Never-Takers (00)        -2.896       -1.660
 ```
 
 Here, the function computes estimates under monotonicity by setting

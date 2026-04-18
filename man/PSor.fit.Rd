@@ -2,7 +2,7 @@
 % Please edit documentation in R/PSor_fit.r
 \name{PSor.fit}
 \alias{PSor.fit}
-\title{Fit Principal Stratification Models with an Odds Ratio Assumption}
+\title{Compute the principal causal effects with an assumed odds ratio sensitivity parameter}
 \usage{
 PSor.fit(
   out.formula,
@@ -17,15 +17,15 @@ PSor.fit(
   SLmethods = c("SL.glm", "SL.rpart", "SL.nnet"),
   n.fold,
   scale = "RD",
-  alpha
+  alpha = 0.05
 )
 }
 \arguments{
-\item{out.formula}{A formula for the outcome model, e.g., \code{Y ~ X1 + X2}.}
+\item{out.formula}{A formula for the outcome model, e.g., `Y ~ X1 + X2`.}
 
-\item{ps.formula}{A formula for the principal score model (for the intermediate variable D), e.g., \code{D ~ X1 + X2}.}
+\item{ps.formula}{A formula for the principal score model (for the intermediate outcome D), e.g., `D ~ X1 + X2`.}
 
-\item{pro.formula}{A formula for the propensity score model (for the treatment Z), e.g., \code{Z ~ X1 + X2}.}
+\item{pro.formula}{A formula for the propensity score model (for the treatment Z), e.g., `Z ~ X1 + X2`.}
 
 \item{df}{The data frame containing the variables.}
 
@@ -37,9 +37,9 @@ PSor.fit(
 
 \item{cov.names}{A character vector of covariate names.}
 
-\item{or}{The odds ratio assumption. Can be a single numeric value, a vector of values corresponding to each observation, or \code{Inf} for the monotonicity assumption.}
+\item{or}{The odds ratio sensitivity parameter. Can be a single numeric value, a vector of values corresponding to each individual, or `Inf` for the monotonicity assumption.}
 
-\item{SLmethods}{A character vector of learning algorithms to be used by \code{SuperLearner} for the DML estimates. Defaults to \code{c("SL.glm", "SL.rpart", "SL.nnet")}.}
+\item{SLmethods}{A character vector of learning algorithms to be used by `SuperLearner` for the DML estimators Defaults to `c("SL.glm", "SL.rpart", "SL.nnet")`.}
 
 \item{n.fold}{The number of folds for cross-fitting in the DML procedure.}
 
@@ -51,11 +51,10 @@ PSor.fit(
 A data frame containing the point estimates, standard errors, and confidence intervals for the causal effects within each principal stratum ("Always-Takers", "Compliers", "Never-Takers", and "Defiers" if applicable). Both CDR and DML results are provided.
 }
 \description{
-\code{PSor.fit} is the main function of the package. It estimates the causal effects
-within principal strata, defined by joint potential values of an intermediate
-variable, under an assumption about the odds ratio of the principal scores.
-The function returns both parametric Conditionally Doubly Robust (CDR) estimates
-and Debiased Machine Learning (DML) estimates.
+`PSor.fit` is the main function of the package. It estimates the principal causal effects
+under principal stratification, assuming an odds ratio sensitivity parameter.
+The function returns point estimates, standard error estimates, and the confidence intervals for
+both parametric Conditionally Doubly Robust (CDR) estimators and Debiased Machine Learning (DML) estimators.
 }
 \examples{
 \dontrun{

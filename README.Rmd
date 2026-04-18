@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
-The goal of **PSor** is to estimate principal causal effects under principal stratification using a margin-free, variational-independent odds ratio sensitivity parameter, allowing analysis when monotonicity may not hold. The framework unifies the monotonicity assumption with the counterfactual intermediate independence assumption. The framework also assumes the mean principal ignorability. The package accompanies the paper ``Semiparametric Principal Stratification Analysis Beyond Monotonicity'' and provides point estimates, standard errors, and confidence intervals for both the conditionally doubly robust (CDR) and debiased machine learning (DML) estimators. 
+The goal of **PSor** is to estimate principal causal effects under principal stratification using a margin-free, variational-independent odds ratio sensitivity parameter, allowing analysis when monotonicity may not hold. The framework unifies the monotonicity assumption with the counterfactual intermediate independence assumption. The framework also assumes the mean principal ignorability. The package accompanies the paper "Semiparametric Principal Stratification Analysis Beyond Monotonicity" and provides point estimates, standard errors, and confidence intervals for both the conditionally doubly robust (CDR) and debiased machine learning (DML) estimators. 
 
 ## Installation
 
