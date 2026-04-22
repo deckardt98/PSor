@@ -33,54 +33,34 @@
 #' @export
 #'
 #' @examples
-#' # Generate structured toy data to allow automatic testing (< 5 sec)
+#' # Generate a perfectly balanced, minimal toy dataset for extremely fast CRAN checks
 #' set.seed(2026)
-#' n <- 200
+#' n <- 50
 #'
-#' # Covariates
-#' X1 <- abs(rnorm(n))
-#' X2 <- abs(rnorm(n))
-#' X3 <- abs(rnorm(n))
-#' X4 <- rbinom(n, 1, 0.5)
+#' # Generate 1 covariate
+#' X1 <- rnorm(n)
 #'
-#' # Treatment
-#' probZ <- plogis(0.1 * (X1 + X2 + X3) + 0.5 * X4)
-#' Z <- rbinom(n, 1, probZ)
+#' # Force perfectly balanced treatment (Z) and intermediate outcome (D)
+#' Z <- sample(rep(c(0, 1), n / 2))
+#' D <- sample(rep(c(0, 1), n / 2))
 #'
-#' # Intermediate Outcome (Monotonicity satisfied)
-#' probD1 <- plogis(1.2 * X4)
-#' probD0 <- plogis(-0.4 - 0.2 * X1 - 0.2 * X2 - 0.2 * X3 - 0.2 * X4)
+#' # Generate final outcome
+#' Y <- rnorm(n, mean = Z + D + X1, sd = 1)
 #'
-#' prob11 <- probD0
-#' prob01 <- probD1 - probD0
-#' prob00 <- 1 - probD1
+#' my_data <- data.frame(Y, D, Z, X1)
 #'
-#' prob_matrix <- cbind(prob00, prob01, prob11)
-#' G <- apply(prob_matrix, 1, function(p) sample(0:2, size = 1, prob = p))
-#'
-#' D1 <- as.numeric(G != 0)
-#' D0 <- as.numeric(G == 2)
-#' D <- D1 * Z + D0 * (1 - Z)
-#'
-#' # Final Outcome
-#' Y1 <- rnorm(n, mean = -1 + D1 + X1 + 3 * X2 + 3 * X3 + 3 * X4, sd = 1)
-#' Y0 <- rnorm(n, mean = 3 - D0 - 1.5 * X1 + 2 * X2 + 2 * X3 - 2 * X4, sd = 1)
-#' Y <- Y1 * Z + Y0 * (1 - Z)
-#'
-#' my_data <- data.frame(Y, D, Z, X1, X2, X3, X4)
-#'
-#' # Run estimation using a fast algorithm (SL.glm) and 2 folds for speed
+#' # Run estimation using a single covariate, SL.mean, and 2 folds for < 1s execution
 #' results <- PSor.fit(
-#'   out.formula = Y ~ X1 + X2 + X3 + X4,
-#'   ps.formula = D ~ X1 + X2 + X3 + X4,
-#'   pro.formula = Z ~ X1 + X2 + X3 + X4,
+#'   out.formula = Y ~ X1,
+#'   ps.formula = D ~ X1,
+#'   pro.formula = Z ~ X1,
 #'   df = my_data,
 #'   out.name = "Y",
 #'   int.name = "D",
 #'   trt.name = "Z",
-#'   cov.names = c("X1", "X2", "X3", "X4"),
+#'   cov.names = "X1",
 #'   or = Inf,
-#'   SLmethods = "SL.glm",
+#'   SLmethods = "SL.mean",
 #'   n.fold = 2,
 #'   scale = "RD"
 #' )
