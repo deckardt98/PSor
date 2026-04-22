@@ -33,20 +33,55 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # This is a conceptual example, as the function requires specific data.
-#' # Assume 'my_data' is a data frame with variables Y, D, Z, X1, X2.
+#' # Generate data matching the structural assumptions of the models
+#' set.seed(2026)
+#' n <- 500
 #'
+#' # Covariates
+#' X1 <- abs(rnorm(n))
+#' X2 <- abs(rnorm(n))
+#' X3 <- abs(rnorm(n))
+#' X4 <- rbinom(n, 1, 0.5)
+#'
+#' # Treatment
+#' probZ <- plogis(0.1 * (X1 + X2 + X3) + 0.5 * X4)
+#' Z <- rbinom(n, 1, probZ)
+#'
+#' # Intermediate Outcome (Monotonicity satisfied)
+#' probD1 <- plogis(1.2 * X4)
+#' probD0 <- plogis(-0.4 - 0.2 * X1 - 0.2 * X2 - 0.2 * X3 - 0.2 * X4)
+#'
+#' prob11 <- probD0
+#' prob01 <- probD1 - probD0
+#' prob00 <- 1 - probD1
+#'
+#' prob_matrix <- cbind(prob00, prob01, prob11)
+#' G <- apply(prob_matrix, 1, function(p) sample(0:2, size = 1, prob = p))
+#'
+#' D1 <- as.numeric(G != 0)
+#' D0 <- as.numeric(G == 2)
+#' D <- D1 * Z + D0 * (1 - Z)
+#'
+#' # Final Outcome
+#' Y1 <- rnorm(n, mean = -1 + D1 + X1 + 3 * X2 + 3 * X3 + 3 * X4, sd = 1)
+#' Y0 <- rnorm(n, mean = 3 - D0 - 1.5 * X1 + 2 * X2 + 2 * X3 - 2 * X4, sd = 1)
+#' Y <- Y1 * Z + Y0 * (1 - Z)
+#'
+#' my_data <- data.frame(Y, D, Z, X1, X2, X3, X4)
+#'
+#' \donttest{
+#' # Run the estimation
 #' results <- PSor.fit(
-#'   out.formula = Y ~ X1 + X2,
-#'   ps.formula = D ~ X1 + X2,
-#'   pro.formula = Z ~ X1 + X2,
+#'   out.formula = Y ~ X1 + X2 + X3 + X4,
+#'   ps.formula = D ~ X1 + X2 + X3 + X4,
+#'   pro.formula = Z ~ X1 + X2 + X3 + X4,
 #'   df = my_data,
 #'   out.name = "Y",
 #'   int.name = "D",
 #'   trt.name = "Z",
-#'   cov.names = c("X1", "X2"),
-#'   or = Inf, # Monotonicity assumption
+#'   cov.names = c("X1", "X2", "X3", "X4"),
+#'   or = Inf,
+#'   SLmethods = c("SL.glm", "SL.mean"),
 #'   n.fold = 5,
 #'   scale = "RD"
 #' )
