@@ -3,9 +3,10 @@
 This is a resubmission in response to CRAN feedback.
 
 The following changes were made:
-* revised the `Description` field in `DESCRIPTION` to provide the methodological reference in CRAN-recommended format using a DOI
-* replaced unnecessary `\dontrun{}` wrappers in examples with `\donttest{}`
-* updated example structure and documentation accordingly
+* revised the `Description` field in `DESCRIPTION` to cite the methodological reference in CRAN-recommended form with authors, year, and DOI
+* removed unnecessary `\donttest{}` wrappers where feasible
+* reduced example sizes so runnable examples are checked automatically
+* refined examples and documentation accordingly
 
 ## Test environments
 * local macOS (Apple silicon M3 Max), R 4.5.2
