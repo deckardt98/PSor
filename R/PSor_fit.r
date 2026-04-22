@@ -33,9 +33,9 @@
 #' @export
 #'
 #' @examples
-#' # Generate data matching the structural assumptions of the models
+#' # Generate structured toy data to allow automatic testing (< 5 sec)
 #' set.seed(2026)
-#' n <- 500
+#' n <- 200
 #'
 #' # Covariates
 #' X1 <- abs(rnorm(n))
@@ -69,8 +69,7 @@
 #'
 #' my_data <- data.frame(Y, D, Z, X1, X2, X3, X4)
 #'
-#' \donttest{
-#' # Run the estimation
+#' # Run estimation using a fast algorithm (SL.glm) and 2 folds for speed
 #' results <- PSor.fit(
 #'   out.formula = Y ~ X1 + X2 + X3 + X4,
 #'   ps.formula = D ~ X1 + X2 + X3 + X4,
@@ -81,13 +80,12 @@
 #'   trt.name = "Z",
 #'   cov.names = c("X1", "X2", "X3", "X4"),
 #'   or = Inf,
-#'   SLmethods = c("SL.glm", "SL.mean"),
-#'   n.fold = 5,
+#'   SLmethods = "SL.glm",
+#'   n.fold = 2,
 #'   scale = "RD"
 #' )
 #'
 #' print(results)
-#' }
 PSor.fit <- function(out.formula, ps.formula, pro.formula,
                      df, out.name, int.name, trt.name, cov.names,
                      or, SLmethods = c("SL.glm", "SL.rpart", "SL.nnet"), n.fold, scale = "RD", alpha = 0.05){

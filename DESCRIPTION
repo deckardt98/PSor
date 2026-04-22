@@ -14,8 +14,8 @@ Description: Estimates principal causal effects under principal stratification
     intermediate independence assumption, allowing for robust analysis when
     monotonicity may not hold. Computes point estimates, standard errors, and
     confidence intervals for conditionally doubly robust and debiased machine
-    learning estimators. Methodological details are given in
-    <doi:10.48550/arXiv.2501.17514>.
+    learning estimators. The methodological details are described in Tong,
+    Kahan, Harhay, and Li (2025) <doi:10.48550/arXiv.2501.17514>.
 License: MIT + file LICENSE
 URL: https://github.com/deckardt98/PSor
 BugReports: https://github.com/deckardt98/PSor/issues
