@@ -6,7 +6,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 **PSor** estimates principal causal effects under principal stratification using a margin-free, variation-independent odds ratio sensitivity parameter, allowing analysis when monotonicity may not hold. The framework unifies the monotonicity assumption with the counterfactual intermediate independence assumption and assumes mean principal ignorability.
 
-The package accompanies the paper “Semiparametric Principal Stratification Analysis Beyond Monotonicity” and provides point estimates, standard errors, and confidence intervals for both the conditionally doubly robust (CDR) and debiased machine learning (DML) estimators.
+The package accompanies the paper “[Semiparametric Principal Stratification Analysis Beyond Monotonicity](https://doi.org/10.5705/ss.202025.0066)” by Jiaqi Tong, Brennan Kahan, Michael O. Harhay, and Fan Li (*Statistica Sinica*, in press). It provides point estimates, standard errors, and confidence intervals for both the conditionally doubly robust (CDR) and debiased machine learning (DML) estimators.
 
 ## Installation
 
