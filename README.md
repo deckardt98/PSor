@@ -4,21 +4,13 @@ PSor Package Vignette
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
-The goal of **PSor** is to estimate principal causal effects under
-principal stratification using a margin-free, variational-independent
-odds ratio sensitivity parameter, allowing analysis when monotonicity
-may not hold. The framework unifies the monotonicity assumption with the
-counterfactual intermediate independence assumption. The framework also
-assumes the mean principal ignorability. The package accompanies the
-paper “Semiparametric Principal Stratification Analysis Beyond
-Monotonicity” and provides point estimates, standard errors, and
-confidence intervals for both the conditionally doubly robust (CDR) and
-debiased machine learning (DML) estimators.
+**PSor** estimates principal causal effects under principal stratification using a margin-free, variation-independent odds ratio sensitivity parameter, allowing analysis when monotonicity may not hold. The framework unifies the monotonicity assumption with the counterfactual intermediate independence assumption and assumes mean principal ignorability.
+
+The package accompanies the paper “Semiparametric Principal Stratification Analysis Beyond Monotonicity” and provides point estimates, standard errors, and confidence intervals for both the conditionally doubly robust (CDR) and debiased machine learning (DML) estimators.
 
 ## Installation
 
-You can install the development version of PSor from
-[GitHub](https://github.com/) with:
+You can install the development version of PSor from [GitHub](https://github.com/deckardt98/PSor) with:
 
 ``` r
 # install.packages("devtools")
@@ -27,29 +19,15 @@ devtools::install_github("deckardt98/PSor")
 
 ## Example
 
-This example demonstrates how to use `PSor.fit` to estimate principal
-causal effects with simulated data from our manuscript. To summarize,
-the data will include a binary treatment `Z`, a binary intermediate
-outcome `D`, a continuous final outcome `Y`, and baseline covariates,
-`\mathbf{X}`. Let `Y(z)` and `D(z)` respectively denote the potential
-final outcome and potential intermediate outcome under treatment value
-`Z=z`. Under principal stratification, the estimand of interest is the
-principal causal effect:
-$$\mu_{d_0d_1}=E\{Y(1)-Y(0)|D(0)=d_0,D(1)=d_1\}.$$ For example, under a
-noncompliance setup where $D$ denotes the actual treatment received, the
-principal strata variable $G=(D(0),D(1))$ can be interpreted as follows:
-$G=11$ represents always-takers, $G=01$ represents compliers, $G=00$
-represents never-takers, and $G=10$ represents defiers. The primary
-estimand of interest is the complier average causal effect (CACE) within
-the stratum $G=01$. Next, we use a simulated dataset with four
-covariates to illustrate an example application of the package.
+This example demonstrates how to use `PSor.fit` to estimate principal causal effects with simulated data from our manuscript. The data include a binary treatment `Z`, a binary intermediate outcome `D`, a continuous final outcome `Y`, and baseline covariates, $\mathbf{X}$. Let $Y(z)$ and $D(z)$ denote the potential final outcome and potential intermediate outcome under treatment $Z=z$, respectively. Under principal stratification, the estimand of interest is the principal causal effect:
 
-### 1. Load Package and Generate Data
+$$\mu_{d_0d_1}=E\{Y(1)-Y(0)|D(0)=d_0,D(1)=d_1\}.$$
 
-First, we load the necessary packages and define a function to generate
-a simulated dataset. This simulated data will include a binary treatment
-`Z`, a binary intermediate outcome `D`, a continuous final outcome `Y`,
-and four covariates, `X1`-`X4`.
+For example, in a noncompliance setting where $D$ denotes the actual treatment received, the principal strata variable $G=(D(0),D(1))$ has the following interpretation: $G=11$ represents always-takers, $G=01$ represents compliers, $G=00$ represents never-takers, and $G=10$ represents defiers. The primary estimand of interest is the complier average causal effect (CACE) within the stratum $G=01$. We use a simulated dataset with four covariates to illustrate the application of the package.
+
+### 1. Load packages and generate data
+
+First, we load the necessary packages and define a function to generate a simulated dataset with a binary treatment `Z`, a binary intermediate outcome `D`, a continuous final outcome `Y`, and four covariates, `X1` through `X4`.
 
 ``` r
 library(truncnorm)
@@ -139,10 +117,7 @@ simu_full_data <- function(n, seed=20250917, theta){
 
 ### 2. Run `PSor.fit`
 
-Now, we simulate a sample data set assuming counterfactual intermediate
-independence with $\theta(\mathbf{X})=1$, and then call the main
-function to compute principal causal effects under either correctly
-specified odds ratio or incorrectly assumed monotonicity.
+We simulate a dataset under counterfactual intermediate independence, with $\theta(\mathbf{X})=1$, and call `PSor.fit` to estimate principal causal effects under the correctly specified odds ratio and under incorrectly assumed monotonicity.
 
 ``` r
 library(PSor)
@@ -213,11 +188,4 @@ PSor.fit(
 #> Never-Takers (00)        -2.896       -1.660
 ```
 
-Here, the function computes estimates under monotonicity by setting
-`or = Inf`. The `CDR` estimator uses linear regression for the
-continuous outcome and logistic regression for the intermediate outcome
-and treatment propensity. For the DML estimator, we will use the
-`SuperLearner` package for nuisance function estimation, including the
-outcome regression, principal score, and propensity score. The argument
-`SLmethods = c("SL.glm", "SL.rpart", "SL.nnet")` specifies the machine
-learning algorithms used to estimate the nuisance functions.
+Setting `or = Inf` computes estimates under monotonicity. The CDR estimator uses linear regression for the continuous outcome and logistic regression for the intermediate outcome and treatment propensity. The DML estimator uses the `SuperLearner` package to estimate nuisance functions, including the outcome regression, principal score, and propensity score. The argument `SLmethods = c("SL.glm", "SL.rpart", "SL.nnet")` specifies the machine learning algorithms used to estimate these functions.
