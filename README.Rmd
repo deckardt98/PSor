@@ -31,7 +31,7 @@ devtools::install_github("deckardt98/PSor")
 
 This example demonstrates how to use `PSor.fit` to estimate principal causal effects with simulated data from our manuscript. The data include a binary treatment `Z`, a binary intermediate outcome `D`, a continuous final outcome `Y`, and baseline covariates, $\mathbf{X}$. Let $Y(z)$ and $D(z)$ denote the potential final outcome and potential intermediate outcome under treatment $Z=z$, respectively. Under principal stratification, the estimand of interest is the principal causal effect:
 
-$$\mu_{d_0d_1}=E\{Y(1)-Y(0)|D(0)=d_0,D(1)=d_1\}.$$
+$$\mu_{d_0d_1}=E\left\lbrace Y(1)-Y(0)\mid D(0)=d_0,D(1)=d_1\right\rbrace.$$
 
 For example, in a noncompliance setting where $D$ denotes the actual treatment received, the principal strata variable $G=(D(0),D(1))$ has the following interpretation: $G=11$ represents always-takers, $G=01$ represents compliers, $G=00$ represents never-takers, and $G=10$ represents defiers. The primary estimand of interest is the complier average causal effect (CACE) within the stratum $G=01$. We use a simulated dataset with four covariates to illustrate the application of the package.
 
